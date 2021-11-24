@@ -1,0 +1,5 @@
+ECHO is on.
+venv/
+__pycache__
+.idea/
+db.sqlite3
