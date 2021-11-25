@@ -59,7 +59,6 @@ def get_VNP46A2_file(session_obj, target_url):
         # Return False
         return False
 
-
 # Function to return a dictionary of URLs to a VNP46A- product on LAADS (will update existing)
 def get_VNP46A_availability(data_product,
                             start_fresh=False,
