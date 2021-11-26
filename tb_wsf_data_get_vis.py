@@ -1,31 +1,49 @@
 import matplotlib as mpl
 from matplotlib import pyplot as plt
 import json
-
-with open("C:/USRA/test_wsf_h17v3", 'r') as f:
-    input_dict = json.load(f)
-
-vnp_hs = []
-vnp_vs = []
-wsf_2015 = []
-wsf_2019 = []
-wsf_difference = []
-
-for vnp_h in input_dict.keys():
-    for vnp_v in input_dict[vnp_h].keys():
-        vnp_hs.append(int(vnp_h))
-        vnp_vs.append(2400 - int(vnp_v))
-        wsf_2015.append(input_dict[vnp_h][vnp_v]["WSF2015"])
-        wsf_2019.append(input_dict[vnp_h][vnp_v]["WSF2019"])
-        wsf_difference.append(input_dict[vnp_h][vnp_v]["WSF2019"] - input_dict[vnp_h][vnp_v]["WSF2015"])
-
-for data_set in [wsf_2015, wsf_2019, wsf_difference]:
-
-    fig = plt.figure(figsize=(10, 10))
-
-    ax = fig.add_subplot(1, 1, 1)
-
-    ax.scatter(vnp_hs, vnp_vs, 3, data_set, marker='.')
-    plt.show()
+import numpy as np
+import pickle
 
 
+with open("C:/USRA/test_wsf_h17v3_arr", 'rb') as f:
+    input_arr = pickle.load(f)
+
+# Get a colormap object
+norm = mpl.colors.Normalize(vmin=0, vmax=np.max(input_arr))
+
+my_cmap = mpl.cm.ScalarMappable(cmap="Spectral_r", norm=norm)
+
+fig = plt.figure(figsize=(20, 10))
+ax = fig.add_subplot(1, 1, 1)
+plt.imshow(input_arr[:, :, 0], cmap=my_cmap.cmap, norm=norm)
+plt.colorbar()
+ax.set_title(f"WSF 2015 Proportion Settled VNP46A Tile h17v03 (United Kingdom)")
+ax.set_xlabel(f"VNP46A in-tile horizontal coordinate")
+ax.set_ylabel(f"VNP46A in-tile vertical coordinate")
+
+plt.show()
+
+fig = plt.figure(figsize=(20, 10))
+ax = fig.add_subplot(1, 1, 1)
+plt.imshow(input_arr[:, :, 1], cmap=my_cmap.cmap, norm=norm)
+plt.colorbar()
+ax.set_title(f"WSF 2019 Proportion Settled VNP46A Tile h17v03 (United Kingdom)")
+ax.set_xlabel(f"VNP46A in-tile horizontal coordinate")
+ax.set_ylabel(f"VNP46A in-tile vertical coordinate")
+
+plt.show()
+
+diff_arr = input_arr[:, :, 1] - input_arr[:, :, 0]
+norm = mpl.colors.Normalize(vmin=0.01, vmax=np.max(diff_arr))
+cmap = mpl.cm.get_cmap("Spectral_r").copy()
+cmap.set_under('k')
+my_cmap = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)
+fig = plt.figure(figsize=(20, 10))
+ax = fig.add_subplot(1, 1, 1)
+plt.imshow(diff_arr, cmap=my_cmap.cmap, norm=norm)
+plt.colorbar()
+ax.set_title(f"Difference in Settled Proportion (2019 - 2015) VNP46A Tile h17v03 (United Kingdom)")
+ax.set_xlabel(f"VNP46A in-tile horizontal coordinate")
+ax.set_ylabel(f"VNP46A in-tile vertical coordinate")
+
+plt.show()

@@ -8,6 +8,56 @@ import c_WSF
 import matplotlib as mpl
 from matplotlib import pyplot as plt
 import json
+import pickle
+#
+# test_arr = np.zeros((2400, 2400))
+# wsf_tile = [-2, 52]
+# # -10 to -2
+# # 58 to 50
+# vnp_h = 479
+# vnp_v = 0
+#
+# vnp_overall_h = int(vnp_h + (480 * (np.floor(((10 + wsf_tile[0]) % 10) / 2))))
+# vnp_overall_v = int(vnp_v + (480 * (np.floor(((8 - wsf_tile[1]) % 10) / 2))))
+# print(vnp_overall_h, vnp_overall_v)
+#
+
+
+# vnp_overall_v = int(vnp_v + (480 * (np.floor(((10 + wsf_tile[0]) % 10) / 2))))
+# vnp_overall_v = int(vnp_h + (480 * (np.floor(((8 - wsf_tile[1]) % 10) / 2))))
+#
+# test_arr[vnp_overall_v, vnp_overall_h] = 255
+#
+# fig = plt.figure(figsize=(10, 10))
+# plt.imshow(test_arr)
+# plt.scatter(vnp_overall_h, vnp_overall_v, 50, 'r', marker='x')
+# plt.show()
+# #print(vnp_overall_h, vnp_overall_v)
+#
+# exit()
+# wsf_arr = c_WSF.get_wsf_tile_file(-2, 50, "WSF2019")
+#
+# fig = plt.figure(figsize=(10, 10))
+#
+# h_slice_start, h_slice_end, v_slice_start, v_slice_end = c_WSF.get_wsf_chunk_for_vnp_pixel(0, 479)
+# plt.imshow(wsf_arr)
+# plt.scatter(h_slice_start, v_slice_start, 15, 'r')
+# plt.scatter(h_slice_start, v_slice_end, 15, 'r')
+# plt.scatter(h_slice_end, v_slice_start, 15, 'r')
+# plt.scatter(h_slice_end, v_slice_end, 15, 'r')
+#
+# #plt.imshow(wsf_arr[h_slice_start : h_slice_end, v_slice_start : v_slice_end])
+# #plt.show()
+#
+#
+# plt.show()
+#
+#
+# exit()
+# # tile_list = c_WSF.get_wsf_tiles("VNP46A", 17, 3)
+# print(tile_list)
+
+
 
 # Crapped out on -8 52
 #
@@ -26,10 +76,13 @@ import json
 vnp_h = 17
 vnp_v = 3
 
-vnp_dict = c_WSF.get_wsf_proportion_of_vnp(vnp_h, vnp_v)
+vnp_arr = c_WSF.get_wsf_proportion_of_vnp(vnp_h, vnp_v)
 
-with open(f"C:/USRA/test_wsf_h{vnp_h}v{vnp_v}", 'w') as of:
-    json.dump(vnp_dict, of)
+# with open(f"C:/USRA/test_wsf_h{vnp_h}v{vnp_v}", 'w') as of:
+#     json.dump(vnp_dict, of)
+
+with open(f"C:/USRA/test_wsf_h{vnp_h}v{vnp_v}_arr", 'wb') as of:
+    pickle.dump(vnp_arr, of)
 
 exit()
 
