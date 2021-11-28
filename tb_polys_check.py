@@ -5,6 +5,38 @@ import json
 import os
 
 dotenv.load_dotenv()
+#
+# # Open file containing json (r = read, f = File)
+# with open(f'E:/USRA/Black Marble/FUA_TS/Inputs/poly_to_tile_to_pixel.json', "r", encoding="utf-8") as f:
+#     # Load dictionary from json as loaded_data
+#     poly_dict = json.load(f)
+#
+# # New dictionary
+# new_dict = {}
+#
+# #
+# for poly in poly_dict.keys():
+#     # Add to new dict
+#     if poly not in new_dict.keys():
+#         new_dict[poly] = {}
+#     for tile in poly_dict[poly]:
+#         if tile not in new_dict[poly].keys():
+#             new_dict[poly][tile] = {}
+#         for px_x in poly_dict[poly][tile].keys():
+#             for px_y in poly_dict[poly][tile][px_x]:
+#                 if px_x == 0 or px_y == 0:
+#                     print(px_x, px_y)
+#                     input()
+#
+# # Open the ASCII file containing the complete list of pixels that are part of polygons
+# with open(os.environ["support_files_path"] + "FUA_polygon_pixels_output.txt", "r", encoding="utf-8") as f:
+#     # Line counter
+#     line_count = 0
+#     # For each line in the file
+#     for line in f:
+#         print(line)
+#         input()
+
 
 with open(os.environ["support_files_path"] + "poly_to_tile_to_pixel.json", 'r') as f:
     poly_dict = json.load(f)
