@@ -15,3 +15,10 @@ class FUAPolygon:
     def __init__(self):
 
         self.efua_id = None
+
+class VNP46A2Tile:
+
+    def __init__(self):
+
+        self.name = None
+

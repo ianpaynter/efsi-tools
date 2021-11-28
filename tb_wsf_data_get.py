@@ -73,8 +73,8 @@ import pickle
 #
 # exit()
 
-vnp_h = 17
-vnp_v = 3
+vnp_h = 32
+vnp_v = 11
 
 vnp_arr = c_WSF.get_wsf_proportion_of_vnp(vnp_h, vnp_v)
 

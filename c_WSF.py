@@ -41,7 +41,7 @@ def get_wsf_tile_file(tile_h, tile_v, wsf_dataset, current_session=None, clip=11
     else:
         # Print warning
         print(f"{wsf_dataset} is not a valid dataset. Use WSF2015 or WSF2019.")
-    print(f"https://download.geoservice.dlr.de/{wsf_dataset}/files/{dataset_url}{tile_h}_{tile_v}.tif")
+    #print(f"https://download.geoservice.dlr.de/{wsf_dataset}/files/{dataset_url}{tile_h}_{tile_v}.tif")
     # Try to request the file
     try:
         # Request the tile file
@@ -67,14 +67,14 @@ def get_wsf_tile_file(tile_h, tile_v, wsf_dataset, current_session=None, clip=11
 
 # Get the WSF proportion for a vnp tile's pixel
 def get_wsf_proportion_of_vnp(tile_h, tile_v):
-    # Dictionary for the VNP tile results
-    vnp_dict = {}
     # Numpy array for VNP tile results
     vnp_arr = np.zeros((2400, 2400, 2))
     # Start a requests session
     current_session = requests.session()
     # Get the WSF tile names for the 25 WSF tiles that fit in a VNP tile
     wsf_tile_list = get_wsf_tiles("VNP46A", tile_h, tile_v)
+    # Overall switch to check there was at least one WSF tile
+    any_wsf_tiles = False
     # For each WSF tile
     for wsf_tile in wsf_tile_list:
         # For 2015 and 2019
@@ -83,10 +83,8 @@ def get_wsf_proportion_of_vnp(tile_h, tile_v):
             wsf_tile_file = get_wsf_tile_file(wsf_tile[0], wsf_tile[1], wsf_dataset, current_session=current_session)
             # If there was a tile file
             if wsf_tile_file is not None:
-                #vnp_overall_h = int(0 + (480 * (np.floor(((10 + wsf_tile[0]) % 10) / 2))))
-                #vnp_overall_v = int(0 + (480 * (np.floor(((8 - wsf_tile[1]) % 10) / 2))))
-                #print(wsf_tile, vnp_overall_h, vnp_overall_v)
-                #input()
+                # Flip the switch
+                any_wsf_tiles = True
                 # For each VNP pixel h and v
                 for vnp_h in np.arange(0, 480):
                     for vnp_v in np.arange(0, 480):
@@ -107,26 +105,8 @@ def get_wsf_proportion_of_vnp(tile_h, tile_v):
                         vnp_overall_h = int(vnp_h + h_offset)
                         vnp_overall_v = int(vnp_v + v_offset)
                         vnp_arr[vnp_overall_v, vnp_overall_h, dataset_ind] = settlement_proportion
-                        #vnp_arr[vnp_overall_h, vnp_overall_v, dataset_ind] = settlement_proportion
-                #fig = plt.figure(figsize=(10, 10))
-                #ax = fig.add_subplot(1, 1, 1)
-                #plt.imshow(vnp_arr[:, :, 0])
-                #plt.show()
-                        # Add to the dictionary
-                        # if vnp_overall_h not in vnp_dict.keys():
-                        #     vnp_dict[vnp_overall_h] = {}
-                        # if vnp_overall_v not in vnp_dict[vnp_overall_h].keys():
-                        #     vnp_dict[vnp_overall_h][vnp_overall_v] = {}
-                        # Note that V has to go first! It's a list of lists.
-                        #vnp_dict[vnp_overall_v][vnp_overall_h][wsf_dataset] = settlement_proportion
-                        #
-                        # if settlement_count / wsf_array_size > 0.1:
-                        #     print(wsf_array_size, settlement_count, settlement_count / wsf_array_size)
-                        #     print(vnp_h, vnp_v)
-                        #     plt.imshow(wsf_chunk)
-                        #     plt.show()
     # Return the results
-    return vnp_arr
+    return vnp_arr, any_wsf_tiles
 
 def get_wsf_chunk_for_vnp_pixel(vnp_h, vnp_v):
     # Accrual rate for leftover pixels
