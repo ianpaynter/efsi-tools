@@ -3,6 +3,10 @@ from matplotlib import pyplot as plt
 import json
 import numpy as np
 import pickle
+import os
+import dotenv
+
+dotenv.load_dotenv()
 
 # Set matplotlib defaults for fonts
 mpl.rc('font', family='Times New Roman')
@@ -11,9 +15,9 @@ mpl.rc('axes', titlesize=14)
 mpl.rc('xtick', labelsize=12)
 mpl.rc('ytick', labelsize=12)
 
-tile_name = "h32v11"
+tile_name = "h17v03"
 
-with open(f"C:/USRA/test_wsf_{tile_name}_arr", 'rb') as f:
+with open(os.path.join(os.environ["wsf_vnp_results_path"], "wsf_for_vnp_" + tile_name), 'rb') as f:
     input_arr = pickle.load(f)
 
 thresholds = []

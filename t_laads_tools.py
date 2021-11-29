@@ -13,6 +13,53 @@ from matplotlib import pyplot as plt
 # Load the .env file
 dotenv.load_dotenv()
 
+# Class for URL dictionary (to load when you need it)
+class LaadsUrlsDict:
+
+    __slots__ = ["dictionary"]
+
+    def __init__(self, data_product):
+
+        # Latest date
+        latest_date = None
+        # Walk the support file directory
+        for root, dirs, files in os.walk(os.environ["support_files_path"]):
+            # For each file name
+            for name in files:
+                # If the file is one of the URL files
+                if f"{data_product}_laads_urls" in name:
+                    # Split the name
+                    split_name = name.split('_')
+                    # If the first part of the name matches the data product
+                    if split_name[0] == data_product:
+                        # Make a datetime date object from the name
+                        file_date = datetime.date(year=int(split_name[-1][4:8]),
+                                                  month=int(split_name[-1][0:2]),
+                                                  day=int(split_name[-1][2:4]))
+                        # If there is no latest date yet
+                        if latest_date is None:
+                            # Set the file's date
+                            latest_date = file_date
+                        # Otherwise, if the file's date is later
+                        elif file_date > latest_date:
+                            # Set the file's date as latest
+                            latest_date = file_date
+        # If there was a file (as indicated by the presence of a latest date)
+        if latest_date is not None:
+            # Print update
+            print(f"Opening URLs file from {latest_date}")
+            # Assemble the path to the file
+            latest_file_path = Path(
+                os.environ["support_files_path"] + data_product + "_laads_urls_" + latest_date.strftime(
+                    "%m%d%Y") + ".json")
+            # Open the file
+            with open(latest_file_path, 'r') as f:
+                # Load as dictionary
+                urls_dict = json.load(f)
+        # Reference dictionary
+        self.dictionary = urls_dict
+
+
 # Function to submit request to LAADS and keep trying until we get a response
 def try_try_again(r, s, target_url):
 
@@ -64,44 +111,8 @@ def get_VNP46A_availability(data_product,
                             start_fresh=False,
                             check_old_gaps=False,
                             cleanup_old_files=False):
-    # Latest date
-    latest_date = None
-    # Walk the support file directory
-    for root, dirs, files in os.walk(os.environ["support_files_path"]):
-        # For each file name
-        for name in files:
-            # If the file is one of the URL files
-            if "laads_urls" in name:
-                # Split the name
-                split_name = name.split('_')
-                # If the first part of the name matches the data product
-                if split_name[0] == data_product:
-                    # Make a datetime date object from the name
-                    file_date = datetime.date(year=int(split_name[-1][4:8]),
-                                              month=int(split_name[-1][0:2]),
-                                              day=int(split_name[-1][2:4]))
-                    # If there is no latest date yet
-                    if latest_date is None:
-                        # Set the file's date
-                        latest_date = file_date
-                    # Otherwise, if the file's date is later
-                    elif file_date > latest_date:
-                        # Set the file's date as latest
-                        latest_date = file_date
-    # If there was a file (as indicated by the presence of a latest date)
-    if latest_date is not None:
-        # Print update
-        print(f"Investigating file from {latest_date}")
-        # Assemble the path to the file
-        latest_file_path = Path(os.environ["support_files_path"] + data_product + "_laads_urls_" + latest_date.strftime("%m%d%Y") + ".json")
-        # Open the file
-        with open(latest_file_path, 'r') as f:
-            # Load as dictionary
-            urls_dict = json.load(f)
-    # Otherwise (no previous url file)
-    else:
-        # Make an empty dictionary
-        urls_dict = {}
+    # Get urls dict
+    urls_dict = LaadsUrlsDict(data_product)
     # Latest spidered date
     latest_spider = None
     # For each tile

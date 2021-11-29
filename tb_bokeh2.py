@@ -45,6 +45,7 @@ dropdown = Select(options=list(poly_dict.keys()))
 def update_title(attrname, old, new):
     plot.title.text = text.value
 
+
 def update_ts_data(attr, old, new):
 
     curr_poly = c_fua_polygons.FUAPolygon()
