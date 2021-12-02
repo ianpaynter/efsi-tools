@@ -55,9 +55,6 @@ class TimeSyncSession:
     def set_target_tile(self, tile_name, wsf_threshold=None):
         # Change the target tile to the supplied tile
         self.target_tile = tile_name
-        # Open the URLs file
-        with open()
-
         # Return the time sync dictionary
         return  self.get_time_sync_dict(data_product, self.target_tile, wsf_threshold)
 

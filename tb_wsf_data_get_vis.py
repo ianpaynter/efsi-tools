@@ -32,10 +32,10 @@ for wsf_pc in np.arange(0, 1, 0.01):
     vnp_2019_pix_counts.append(np.count_nonzero(input_arr[:, :, 1] > wsf_pc))
 
 # Figure
-fig = plt.figure(figsize=(30, 10))
+fig = plt.figure(figsize=(20, 10))
 fig.tight_layout()
 # For each 5% threshold
-for plot_n, pc_thresh in enumerate(np.arange(0.0001, 0.21, 0.05)):
+for plot_n, pc_thresh in enumerate(np.arange(0.01, 0.2, 0.05)):
     # Get a colormap object
     norm = mpl.colors.Normalize(vmin=pc_thresh, vmax=np.max(input_arr))
     cmap = mpl.cm.get_cmap("Spectral_r").copy()
@@ -54,6 +54,8 @@ ax = fig.add_subplot(2, 3, 6)
 
 line_2015, = ax.plot(thresholds, vnp_2015_pix_counts, linewidth=1, color='r')
 line_2019, = ax.plot(thresholds, vnp_2019_pix_counts, linewidth=1, color='k')
+line_5pc, = ax.plot([5, 5], [min(vnp_2019_pix_counts), max(vnp_2019_pix_counts)], linewidth=1, color='b')
+
 ax.set_xlabel("Settled %")
 ax.set_ylabel("VNP46A Pixel Count")
 ax.legend([line_2015, line_2019], ["WSF 2015", "WSF 2019"],

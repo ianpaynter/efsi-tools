@@ -84,8 +84,9 @@ def connect_to_laads():
     # Return the session object
     return s
 
-# Get a VNP46A2 H5 file from laads and return it as a numpy array
-def get_VNP46A2_file(session_obj, target_url):
+
+# Get a VNP46A H5 file from laads and return it as a numpy array
+def get_VNP46A_file(session_obj, target_url, return_content=False):
 
     # Request the H5 file from the provided URL
     r = session_obj.get(target_url)
@@ -95,6 +96,9 @@ def get_VNP46A2_file(session_obj, target_url):
         r = try_try_again(r, session_obj, target_url)
     # Try to convert into an h5 object
     try:
+        # If content
+        if return_content is True:
+            return r.content
         # Convert to h5 file object
         h5file = h5py.File(io.BytesIO(r.content), 'r')
         # Convert the response content to an H5py File object and return
@@ -102,9 +106,10 @@ def get_VNP46A2_file(session_obj, target_url):
     # If it fails (incomplete file)
     except:
         # Print a warning
-        print('Warning: File could not be converted to h5. Possibly incomplete.')
-        # Return False
-        return False
+        print(f'Warning: File {target_url} could not be converted to h5. Possibly incomplete.')
+        # Return None
+        return None
+
 
 # Function to return a dictionary of URLs to a VNP46A- product on LAADS (will update existing)
 def get_VNP46A_availability(data_product,

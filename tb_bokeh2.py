@@ -11,7 +11,7 @@ import datetime
 poly_dict = {}
 
 # Walk the results directory
-for root, dirs, files in os.walk("C:/USRA/FUA_Processing/outputs"):
+for root, dirs, files in os.walk("F:/USRA/FUA_Processing/outputs"):
     # For each file name
     for name in files:
         poly_dict[name.split('_')[0]] = name
@@ -49,7 +49,7 @@ def update_title(attrname, old, new):
 def update_ts_data(attr, old, new):
 
     curr_poly = c_fua_polygons.FUAPolygon()
-    curr_poly.load_from_json(f"C:/USRA/FUA_Processing/outputs/{poly_dict[str(new)]}")
+    curr_poly.load_from_json(f"F:/USRA/FUA_Processing/outputs/{poly_dict[str(new)]}")
     days, ntls = curr_poly.get_time_series()
     plot.x_range.bounds = (days[0], days[-1])
     #p.y_range.factors = (int(np.min(ntls)), int(np.max(ntls)))
@@ -64,7 +64,7 @@ def update_ts_data(attr, old, new):
 def update_ra_data(attr, old, new):
 
     ra_poly = c_fua_polygons.FUAPolygon()
-    ra_poly.load_from_json(f"C:/USRA/FUA_Processing/outputs/{poly_dict[dropdown.value]}")
+    ra_poly.load_from_json(f"F:/USRA/FUA_Processing/outputs/{poly_dict[dropdown.value]}")
     days, ntls = ra_poly.get_rolling_average(int(new))
     #plot.x_range.bounds = (days[0], days[-1])
     # p.y_range.factors = (int(np.min(ntls)), int(np.max(ntls)))
