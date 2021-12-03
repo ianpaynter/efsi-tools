@@ -3,6 +3,7 @@ import requests
 import io
 import tifffile
 from matplotlib import pyplot as plt
+import c_VNP46A
 
 
 def get_wsf_tiles(tile_grid, tile_h, tile_v):
@@ -108,6 +109,7 @@ def get_wsf_proportion_of_vnp(tile_h, tile_v):
     # Return the results
     return vnp_arr, any_wsf_tiles
 
+
 def get_wsf_chunk_for_vnp_pixel(vnp_h, vnp_v):
     # Accrual rate for leftover pixels
     pixel_accrual = (22264 / 480) % 46
@@ -118,3 +120,13 @@ def get_wsf_chunk_for_vnp_pixel(vnp_h, vnp_v):
     v_slice_end = int(np.floor(((vnp_v + 1) * 46) + ((vnp_v + 1) * pixel_accrual)))
     # Return the slice indices
     return h_slice_start, h_slice_end, v_slice_start, v_slice_end
+
+
+# Return the threshold for a pixel of given vertical coordinate (0 from North), given a proportional threshold.
+def get_threshold_for_lat(vnp_pixel_v, equator_threshold):
+    # Get the pixel area a pixel that straddles the equator (there is no such pixel in the VNP grid) <>
+    equator_area = c_VNP46A.get_pixel_area(21619.5)
+    # Get the pixel area for the target pixel
+    pixel_area = c_VNP46A.get_pixel_area(vnp_pixel_v)
+    # Return threshold multiplied by the proportion of area
+    return equator_threshold * (pixel_area / equator_area)
