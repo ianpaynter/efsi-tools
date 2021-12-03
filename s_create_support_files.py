@@ -80,7 +80,8 @@ with open(os.path.join(os.environ["support_files_path"], "FUA_polygon_pixels_out
                 # Add a subdict
                 poly_dict[poly_id][tile_name][new_pixel[0]] = {}
             # Get adjusted global y
-            adj_global_y = pix_y + ((new_pixel[1] - (in_tile_y * 2)) / 2)
+            adj_global_y = (new_pixel[1]) + 2400 * int(tile_v)
+            #adj_global_y = pix_y + ((new_pixel[1] - (in_tile_y * 2)) / 2)
             # Save the pixel's adjusted area. Why the heck not?
             poly_dict[poly_id][tile_name][new_pixel[0]][new_pixel[1]] = c_VNP46A.get_pixel_area(adj_global_y)
 
